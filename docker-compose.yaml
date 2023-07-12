@@ -1,0 +1,43 @@
+version: "3"
+services:
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  postgres:
+    build: ./postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: vectordb
+
+  service2:
+    build: ./service2
+    ports:
+      - "5000:80"
+    depends_on:
+      - postgres
+
+  service3:
+    build: ./service3
+    ports:
+      - "8000:80"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+
+volumes:
+  redis_data:
+  redis2_data:
