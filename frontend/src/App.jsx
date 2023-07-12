@@ -58,8 +58,8 @@ const App = () => {
     );
 
     const data = await response.json();
-    setConversation(data); // Update the conversation state with the response data
-    setUserMessage(""); // Clear the input field
+    setConversation(data);
+    setUserMessage("");
     setIsLoading(false);
   };
 

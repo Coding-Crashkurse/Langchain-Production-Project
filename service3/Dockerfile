@@ -1,17 +1,17 @@
-# Use an official Python runtime as a parent image
 FROM python:3.9-slim-buster
 
-# Set the working directory in the container to /app
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
 COPY . /app
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir fastapi uvicorn redis requests openai
+RUN pip install --no-cache-dir fastapi uvicorn redis requests openai langchain python-dotenv postgres psycopg2-binary pgvector
 
-# Make port 80 available to the world outside this container
+# install postgresql client
+RUN apt-get update && apt-get install -y postgresql-client && rm -rf /var/lib/apt/lists/*
+
+COPY wait-for-postgres.sh /wait-for-postgres.sh
+RUN chmod +x /wait-for-postgres.sh
+
 EXPOSE 80
 
-# Run app.py when the container launches
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["/wait-for-postgres.sh", "postgres", "uvicorn", "app:app", "--host", "0.0.0.0", "--port", "80"]
