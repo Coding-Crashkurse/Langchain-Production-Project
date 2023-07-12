@@ -9,7 +9,8 @@ RUN pip install --no-cache-dir fastapi uvicorn redis requests openai langchain p
 # install postgresql client
 RUN apt-get update && apt-get install -y postgresql-client && rm -rf /var/lib/apt/lists/*
 
-COPY wait-for-postgres.sh /wait-for-postgres.sh
+# Copy wait-for-postgres.sh and make it executable
+COPY ./wait-for-postgres.sh /wait-for-postgres.sh
 RUN chmod +x /wait-for-postgres.sh
 
 EXPOSE 80
