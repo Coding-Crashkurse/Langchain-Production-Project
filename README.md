@@ -10,7 +10,7 @@ The project consists of the following services:
 
 2. **Service2:** A Python (FastAPI)-based backend that coordinates the communication between the frontend and Service3. This service also manages the interaction history between the user and the chatbot.
 
-3. **Service3:** Another Python (FastAPI)-based backend hosting the chatbot algorithm. This service communicates with the AI engine (OpenAI GPT-4) to process user queries and generate suitable responses.
+3. **Service3:** Another Python (FastAPI)-based backend hosting the chatbot algorithm. This service communicates with the AI engine (OpenAI GPT-3.5-turbo) to process user queries and generate suitable responses.
 
 4. **Redis:** A Redis server used for state storage across the services.
 
@@ -31,3 +31,7 @@ This command starts all services using the `docker-compose.yml` file. It downloa
 ## Data Population
 
 The provided `insert_data.py` script can be used to populate the Postgres database with your data. To do this, run the script once the services are up and running. It will connect to the Postgres service, create the necessary tables, and insert data into them.
+
+# Env Variable
+
+Rename the .env.example to .env and set your OpenAI API Key.
