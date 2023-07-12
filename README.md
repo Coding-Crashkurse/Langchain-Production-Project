@@ -32,6 +32,6 @@ This command starts all services using the `docker-compose.yml` file. It downloa
 
 The provided `insert_data.py` script can be used to populate the Postgres database with your data. To do this, run the script once the services are up and running. It will connect to the Postgres service, create the necessary tables, and insert data into them.
 
-# Env Variable
+## Env Variable
 
 Rename the .env.example to .env and set your OpenAI API Key.
