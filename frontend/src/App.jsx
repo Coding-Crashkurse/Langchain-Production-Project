@@ -73,7 +73,7 @@ const App = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <h1 className="text-3xl font-bold mb-4 text-white">Restaurant Chatbot</h1>
+      <h1 className="text-3xl font-bold mb-4 text-white">Buyer Co-pilot</h1>
       {conversation.conversation.length > 0 && (
         <div className="flex flex-col p-4 bg-white rounded shadow w-full max-w-md space-y-4">
           {conversation.conversation
