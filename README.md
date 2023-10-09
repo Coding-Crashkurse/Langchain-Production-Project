@@ -35,3 +35,38 @@ The provided `insert_data.py` script can be used to populate the Postgres databa
 ## Env Variable
 
 Rename the .env.example to .env and set your OpenAI API Key.
+
+# LangChain on KuberNetes - Locally
+
+1. Run Registry as Docker Container
+
+`docker run -d -p 5000:5000 --name local-registry registry:2`
+
+2. Build all images locally
+
+```shell
+docker build -t mypostgres ./postgres
+docker build -t myservice2 ./service2
+docker build -t myservice3 ./service3
+docker build -t myfrontend ./frontend
+```
+
+3. Tag and push images
+
+```shell
+# For Postgres
+docker tag mypostgres localhost:5000/mypostgres
+docker push localhost:5000/mypostgres
+
+# For Service2
+docker tag myservice2 localhost:5000/myservice2
+docker push localhost:5000/myservice2
+
+# For Service3
+docker tag myservice3 localhost:5000/myservice3
+docker push localhost:5000/myservice3
+
+# For Frontend
+docker tag myfrontend localhost:5000/myfrontend
+docker push localhost:5000/myfrontend
+```
