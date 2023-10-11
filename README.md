@@ -70,3 +70,7 @@ docker push localhost:5000/myservice3
 docker tag myfrontend localhost:5000/myfrontend
 docker push localhost:5000/myfrontend
 ```
+
+Now deploy everything to kubernetes with the kubernetes CLI:
+
+`kubectl apply -f all-deployments.yaml`

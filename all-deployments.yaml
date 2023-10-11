@@ -51,7 +51,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: mypostgres:latest
+          image: localhost:5000/mypostgres:latest
           ports:
             - containerPort: 5432
           env:
@@ -97,7 +97,7 @@ spec:
     spec:
       containers:
         - name: service2
-          image: myservice2:latest
+          image: localhost:5000/myservice2:latest
           ports:
             - containerPort: 80
 ---
@@ -129,12 +129,10 @@ spec:
     spec:
       containers:
         - name: service3
-          image: myservice3:latest
+          image: localhost:5000/myservice3:latest
           ports:
             - containerPort: 80
-          envFrom:
-            - configMapRef:
-                name: service3-configmap
+
 ---
 apiVersion: v1
 kind: Service
@@ -164,7 +162,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: myfrontend:latest
+          image: localhost:5000/myfrontend:latest
           ports:
             - containerPort: 3000
 ---
@@ -173,8 +171,50 @@ kind: Service
 metadata:
   name: frontend
 spec:
+  type: NodePort
   selector:
     app: frontend
   ports:
     - port: 3000
       targetPort: 3000
+      nodePort: 31000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.19.0
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: nginx-config-volume
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+      volumes:
+        - name: nginx-config-volume
+          configMap:
+            name: nginx-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  type: ClusterIP
+  selector:
+    app: nginx
+  ports:
+    - port: 80
+      targetPort: 80

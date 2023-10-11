@@ -10,9 +10,7 @@ const App = () => {
     const fetchConversation = async () => {
       const conversationId = localStorage.getItem("conversationId");
       if (conversationId) {
-        const response = await fetch(
-          `http://localhost:5000/service2/${conversationId}`
-        );
+        const response = await fetch(`http://service2/${conversationId}`);
         const data = await response.json();
         if (!data.error) {
           setConversation(data);
@@ -48,14 +46,11 @@ const App = () => {
       { role: "user", content: userMessage },
     ];
 
-    const response = await fetch(
-      `http://localhost:5000/service2/${conversationId}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ conversation: newConversation }),
-      }
-    );
+    const response = await fetch(`http://service2/${conversationId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ conversation: newConversation }),
+    });
 
     const data = await response.json();
     setConversation(data);
