@@ -9,12 +9,35 @@ const App = () => {
   useEffect(() => {
     const fetchConversation = async () => {
       const conversationId = localStorage.getItem("conversationId");
-      if (conversationId) {
-        const response = await fetch(`http://service2/${conversationId}`);
-        const data = await response.json();
-        if (!data.error) {
-          setConversation(data);
+
+      if (!conversationId) {
+        console.error("No conversation ID found in local storage.");
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `http://localhost/service2/${conversationId}`
+        );
+
+        // First, check if the response status code is not in the successful range
+        if (!response.ok) {
+          throw new Error(
+            `An error occurred: ${response.status} ${response.statusText}`
+          );
         }
+
+        // Try parsing the response as JSON
+        const data = await response.json();
+
+        if (data.error) {
+          throw new Error(`Server responded with an error: ${data.error}`);
+        }
+
+        setConversation(data);
+      } catch (error) {
+        // This block will handle any errors that occur during the fetch operation
+        console.error("Error fetching conversation:", error.toString());
       }
     };
 
@@ -46,11 +69,14 @@ const App = () => {
       { role: "user", content: userMessage },
     ];
 
-    const response = await fetch(`http://service2/${conversationId}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ conversation: newConversation }),
-    });
+    const response = await fetch(
+      `http://localhost/service2/${conversationId}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ conversation: newConversation }),
+      }
+    );
 
     const data = await response.json();
     setConversation(data);
@@ -69,7 +95,7 @@ const App = () => {
       }}
     >
       <h1 className="text-3xl font-bold mb-4 text-white">Restaurant Chatbot</h1>
-      {conversation.conversation.length > 0 && (
+      {conversation.conversation && conversation.conversation.length > 0 && (
         <div className="flex flex-col p-4 bg-white rounded shadow w-full max-w-md space-y-4">
           {conversation.conversation
             .filter((message) => message.role !== "system")

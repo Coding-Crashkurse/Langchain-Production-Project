@@ -77,7 +77,8 @@ spec:
   selector:
     app: postgres
   ports:
-    - port: 5433
+    - protocol: TCP
+      port: 5432
       targetPort: 5432
 ---
 # Service2
@@ -132,6 +133,12 @@ spec:
           image: localhost:5000/myservice3:latest
           ports:
             - containerPort: 80
+          env:
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: openai-secret
+                  key: OPENAI_API_KEY
 
 ---
 apiVersion: v1
@@ -179,42 +186,20 @@ spec:
       targetPort: 3000
       nodePort: 31000
 ---
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: nginx
-  template:
-    metadata:
-      labels:
-        app: nginx
-    spec:
-      containers:
-        - name: nginx
-          image: nginx:1.19.0
-          ports:
-            - containerPort: 80
-          volumeMounts:
-            - name: nginx-config-volume
-              mountPath: /etc/nginx/nginx.conf
-              subPath: nginx.conf
-      volumes:
-        - name: nginx-config-volume
-          configMap:
-            name: nginx-config
----
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx
+  name: nginx-ingress-controller
+  namespace: ingress-nginx # use the namespace your ingress controller is deployed in
 spec:
-  type: ClusterIP
-  selector:
-    app: nginx
+  type: LoadBalancer
   ports:
-    - port: 80
+    - name: http
+      port: 80
       targetPort: 80
+    - name: https
+      port: 443
+      targetPort: 443
+  selector:
+    app.kubernetes.io/name: ingress-nginx # use the correct selector for your ingress controller pods
+
