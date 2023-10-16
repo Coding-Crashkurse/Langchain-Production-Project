@@ -54,7 +54,7 @@ async def service2(conversation_id: str, conversation: Conversation):
     existing_conversation["conversation"].append(conversation.dict()["conversation"][-1])
 
     try:
-        response = requests.post(f"http://service3/service3/{conversation_id}", json=existing_conversation)
+        response = requests.post(f"http://service3:8000/service3/{conversation_id}", json=existing_conversation)
         response.raise_for_status()
     except requests.exceptions.RequestException as e:
         logger.error(f"Request to service3 failed: {e}")

@@ -2,12 +2,19 @@
 
 # Funktion, um Docker-Operationen auszuführen
 do_docker() {
-    echo "remove registry..."
-    docker stop local-registry
-    docker rm local-registry
-
-    echo "Starte Docker Registry..."
-    docker run -d -p 5000:5000 --name local-registry registry:2
+    # Check if the registry is already running
+    if [ -z "$(docker ps -q -f name=local-registry)" ]; then
+        if [ -n "$(docker ps -aq -f status=exited -f name=local-registry)" ]; then
+            # cleanup
+            echo "Removing exited local registry container..."
+            docker rm local-registry
+        fi
+        # run your container
+        echo "Starting Docker Registry..."
+        docker run -d -p 5000:5000 --name local-registry registry:2
+    else
+        echo "Docker Registry is already running..."
+    fi
 
     echo "Build images..."
     docker build -t mypostgres ./postgres
@@ -46,4 +53,3 @@ if [ "$1" == "--build" ]; then
 else
     do_kubernetes
 fi
-

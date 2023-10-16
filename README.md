@@ -71,6 +71,9 @@ docker tag myfrontend localhost:5000/myfrontend
 docker push localhost:5000/myfrontend
 ```
 
+Store your OpenAI API-Key in a secret:
+`kubectl create secret generic openai-secret --from-literal=OPENAI_API_KEY=sk-xxx`
+
 Now deploy everything to kubernetes with the kubernetes CLI:
 
 `kubectl apply -f all-deployments.yaml`

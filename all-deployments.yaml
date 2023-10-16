@@ -34,7 +34,6 @@ spec:
     - port: 6379
       targetPort: 6379
 ---
-# Postgres
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -66,8 +65,9 @@ spec:
               mountPath: /docker-entrypoint-initdb.d
       volumes:
         - name: init-sql
-          hostPath:
-            path: /path/on/host/postgres/init.sql
+          configMap:
+            name: init-sql
+
 ---
 apiVersion: v1
 kind: Service
