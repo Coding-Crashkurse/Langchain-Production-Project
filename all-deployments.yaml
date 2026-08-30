@@ -22,7 +22,7 @@ spec:
       volumes:
         - name: redis-data
           emptyDir: {}
----
+--- 
 apiVersion: v1
 kind: Service
 metadata:
