@@ -1,8 +1,8 @@
 from dotenv import find_dotenv, load_dotenv
-from langchain.embeddings import OpenAIEmbeddings
+from langchain_openai import OpenAIEmbeddings
 from langchain.text_splitter import CharacterTextSplitter
-from langchain.vectorstores.pgvector import PGVector
-from langchain.document_loaders import DirectoryLoader, TextLoader
+from langchain_community.vectorstores.pgvector import PGVector
+from langchain_community.document_loaders import DirectoryLoader, TextLoader
 
 load_dotenv(find_dotenv())
 
